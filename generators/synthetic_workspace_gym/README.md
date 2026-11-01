@@ -26,7 +26,7 @@ uv run --project generators/synthetic_workspace_gym swg-export-dataset \
   --generator-revision "$(git rev-parse HEAD)"
 ```
 
-`--generator-revision` must be the full committed source revision used for the export. It is embedded in the export metadata and every task manifest. Generation writes canonical UTF-8/LF bytes so the same revision produces identical task fingerprints on Windows and Linux.
+`--generator-revision` must be the full committed source revision used for the export. It is embedded in the export metadata and every task manifest. Generation writes canonical UTF-8/LF bytes so the same revision produces identical task fingerprints on Windows and Linux. The command above creates a **new** export from the current commit; to reproduce the already-published V5 bytes, check out the `exporting_generator_revision` recorded in `configs/synthetic_workspace_gym/release.json` and use that revision. Do not overwrite the frozen dataset or image tags.
 
 The source-manifest hashes in `configs/synthetic_workspace_gym/release.json` describe the already-published V5 export. The `swg-capability-evaluators-v4` provenance label is a separate evaluator revision, not a curriculum number: V5 was exported after the evaluator moved from v3 to v4. Changing that label would change task-blob bytes and requires a new immutable export; it must not silently rewrite the pinned V5 release.
 
