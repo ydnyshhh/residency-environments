@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import copy
 import hashlib
 import json
@@ -7,7 +8,7 @@ import random
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "configs" / "synthetic_workspace_gym"
+OUT = ROOT / "generators" / "synthetic_workspace_gym" / "build" / "manifests"
 RESIDENCY_MANIFESTS = (
     "sft-easy-v5",
     "sft-validation-v5",
@@ -746,12 +747,15 @@ def native_evaluation_config(manifest_name: str, count: int, rollouts: int) -> s
 
 
 def main():
-    OUT.mkdir(parents=True, exist_ok=True)
+    parser = argparse.ArgumentParser(description="Build SWG curriculum manifests from source definitions.")
+    parser.add_argument("--output-dir", type=Path, default=OUT)
+    args = parser.parse_args()
+    args.output_dir.mkdir(parents=True, exist_ok=True)
     manifests = build()
     for name in RESIDENCY_MANIFESTS:
         payload = manifests[name]
         serialized = json.dumps(payload, indent=2, sort_keys=True) + "\n"
-        (OUT / f"{name}.json").write_bytes(serialized.encode("utf-8"))
+        (args.output_dir / f"{name}.json").write_bytes(serialized.encode("utf-8"))
     print(
         json.dumps(
             {

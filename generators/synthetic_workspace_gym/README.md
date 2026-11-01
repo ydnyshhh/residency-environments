@@ -2,7 +2,7 @@
 
 This directory contains the deterministic generation, provenance, and validation library for the Synthetic Workspace Gym taskset. It is deliberately separate from the installable environment package.
 
-The checked-in source curricula live in `configs/synthetic_workspace_gym/`. Earlier revisions remain frozen for provenance. The six V5 curricula and evaluation panels calibrate untouched baselines through the shipped execution protocol and harden structure-only and nondeterministic rewards:
+The six V5 curricula and evaluation panels are published in the immutable dataset; `configs/synthetic_workspace_gym/release.json` pins their release and hashes the reproducible source manifests. The curricula calibrate untouched baselines through the shipped execution protocol and harden structure-only and nondeterministic rewards:
 
 - `sft-easy-v5`
 - `sft-validation-v5`
@@ -21,12 +21,14 @@ Generate the review-safe artifact layout from all 1,328 assignments, validating 
 
 ```bash
 uv run --project generators/synthetic_workspace_gym swg-export-dataset \
-  --manifest-dir configs/synthetic_workspace_gym \
+  --manifest-dir generators/synthetic_workspace_gym/build/manifests \
   --output-dir generators/synthetic_workspace_gym/dist \
   --generator-revision "$(git rev-parse HEAD)"
 ```
 
 `--generator-revision` must be the full committed source revision used for the export. It is embedded in the export metadata and every task manifest. Generation writes canonical UTF-8/LF bytes so the same revision produces identical task fingerprints on Windows and Linux.
+
+The source-manifest hashes in `configs/synthetic_workspace_gym/release.json` describe the already-published V5 export. The `swg-capability-evaluators-v4` provenance label is a separate evaluator revision, not a curriculum number: V5 was exported after the evaluator moved from v3 to v4. Changing that label would change task-blob bytes and requires a new immutable export; it must not silently rewrite the pinned V5 release.
 
 The export deliberately separates trust domains. `dist/dataset/` contains lightweight curriculum indexes and one deterministic grader-only blob per unique task. `dist/images/<curriculum>/` contains only the visible workspaces for that curriculum. `integrity.json` records every exported file digest. Hidden files and visible workspaces are never combined in one distributable archive.
 

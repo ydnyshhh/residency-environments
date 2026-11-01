@@ -4,6 +4,8 @@ import hashlib
 from pathlib import Path
 
 ENVIRONMENT_VERSION = "0.1.0"
+# Evaluator revisions are independent of curriculum revisions. V5 curricula
+# were exported with the v4 evaluator protocol and retain that frozen label.
 EVALUATOR_VERSION = "swg-capability-evaluators-v4"
 
 

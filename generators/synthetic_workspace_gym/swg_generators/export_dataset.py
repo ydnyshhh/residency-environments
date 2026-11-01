@@ -283,7 +283,11 @@ def export_artifacts(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Export SWG Hub data and split-isolated image contexts.")
-    parser.add_argument("--manifest-dir", type=Path, default=Path("configs/synthetic_workspace_gym"))
+    parser.add_argument(
+        "--manifest-dir",
+        type=Path,
+        default=Path("generators/synthetic_workspace_gym/build/manifests"),
+    )
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--no-validate", action="store_true")
     parser.add_argument("--max-workers", type=int, default=1)
